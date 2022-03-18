@@ -22,7 +22,7 @@ void hashmap_put(T_HashMap* map, char *key, char* value);
  * @param *value will point towards the value of the key if existent else, won t be modified
  * @return HASHMAP_KEY_NOT_FOUND or HASHMAP_KEY_FOUND
  */
-int hashmap_get(T_HashMap* map, char *key, char* value);
+int hashmap_get(T_HashMap* map, char *key, char** value);
 
 // Will delete the hashmap and free the memory
 void hashmap_delete(T_HashMap* map);

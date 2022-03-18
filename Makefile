@@ -1,2 +1,2 @@
 build:
-	gcc main.c hashmap.c -o exe
+	gcc main.c hashmap.c -o exe -Wall

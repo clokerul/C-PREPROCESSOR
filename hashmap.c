@@ -9,13 +9,13 @@ T_HashMap* hashmap_init() {
     return map;
 }
 
-int hashmap_get(T_HashMap* map, char *key, char* value) {
-    if (map == NULL) return HASHMAP_KEY_NOT_FOUND;
+int hashmap_get(T_HashMap* map, char *key, char** value) {
+    if (map == NULL || map->entry == NULL) return HASHMAP_KEY_NOT_FOUND;
 
     T_HashMap *iter = map;
     while (iter != NULL) {
         if (iter->entry->key == key) {
-            value = iter->entry->value;
+            *value = iter->entry->value;
             return HASHMAP_KEY_FOUND;
         }
     }
@@ -45,8 +45,8 @@ void hashmap_put(T_HashMap* map, char *key, char* value) {
     }
 
     // Trying to find if the file already is existent
-    char *existent_value;
-    if (hashmap_get(map, key, existent_value) == HASHMAP_KEY_FOUND) {
+    char *existent_value = NULL;
+    if (hashmap_get(map, key, &existent_value) == HASHMAP_KEY_FOUND) {
         printf("Mapping %s->%s already exists in this hashmap! For entry %s->%s\n", key, existent_value, key, value);
     } else {
         T_HashMap *iter = map;
