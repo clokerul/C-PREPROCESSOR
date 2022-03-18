@@ -24,19 +24,6 @@ int hashmap_get(T_HashMap* map, char *key, char** value) {
     return HASHMAP_KEY_NOT_FOUND;
 }
 
-void hashmap_delete(T_HashMap* map) {
-    if (map == NULL) return;
-
-    T_HashMap *this = map, *next = map->next;
-
-    while (this != NULL) {
-        free(this->entry);
-        this = next;
-        if (next != NULL)
-        next = next->next;
-    }
-}
-
 void hashmap_put(T_HashMap* map, char *key, char* value) {
     // If map is null, initialize it
     if (map == NULL) {
@@ -64,5 +51,19 @@ void hashmap_print(T_HashMap* map) {
     while (iter != NULL && iter->entry != NULL) {
         printf("[%s - > %s]\n", iter->entry->key, iter->entry->value);
         iter = iter->next;
+    }
+}
+
+void hashmap_delete(T_HashMap* map) {
+    if (map == NULL) return;
+
+    T_HashMap *this = map, *next = map->next;
+
+    while (this != NULL) {
+        free(this->entry);
+        free(this);
+        this = next;
+        if (next != NULL)
+            next = next->next;
     }
 }

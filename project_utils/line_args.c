@@ -40,27 +40,33 @@ void process_arguments(T_HashMap *map, T_LineArguments *line_args, int argc, cha
                 break;
 
             flag = argv[i][1];
-            char key_value[2][50];
+            char key_value[2][50], argument[50];
             int last_directory;
+
+            if (flag == 'D' || flag == 'I' || flag == 'o') {
+                if (argv[i][2] == '\0') {
+                    strcpy(argument, argv[i + 1]);
+                    i++;
+                } else {
+                    strcpy(argument, argv[i] + 2);
+                }
+            }
 
             switch (flag) {
             case 'D':
                 printf("Flag D detected with %s\n", argv[i + 1]);
-                read_symbol(argv[i + 1], key_value);
+                read_symbol(argument, key_value);
                 hashmap_put(map, key_value[0], key_value[1]);
-                i++;
                 break;
             case 'I':   // add new directory
-                printf("Flag I detected with %s\n", argv[i + 1]);
+                printf("Flag I detected with %s\n", argument);
                 last_directory = line_args->last_directory;
-                strcpy(line_args->source_directors[last_directory], argv[i + 1]);
+                strcpy(line_args->source_directors[last_directory], argument);
                 line_args->last_directory++;
-                i++;
                 break;
             case 'o':   // outfile
-                printf("Flag o detected with %s\n", argv[i + 1]);
-                strcpy(line_args->outfile, argv[i + 1]);
-                i++;
+                printf("Flag o detected with %s\n", argument);
+                strcpy(line_args->outfile, argument);
                 break;
             
             default:
