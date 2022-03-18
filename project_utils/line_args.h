@@ -3,7 +3,7 @@
 #include "hashmap.h"
 
 typedef struct LineArguments {
-    char *source_directors[50], infile[50], outfile[50];
+    char source_directors[50][50], infile[50], outfile[50];
     int last_directory;
 } T_LineArguments;
 

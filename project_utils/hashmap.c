@@ -61,7 +61,7 @@ void hashmap_print(T_HashMap* map) {
     printf("Printing hashmap:\n");
     T_HashMap *iter = map;
 
-    while (iter != NULL) {
+    while (iter != NULL && iter->entry != NULL) {
         printf("[%s - > %s]\n", iter->entry->key, iter->entry->value);
         iter = iter->next;
     }

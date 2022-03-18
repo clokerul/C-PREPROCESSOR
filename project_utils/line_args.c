@@ -11,56 +11,69 @@ void init_lineargs(T_LineArguments *line_args) {
 void read_symbol(char *symbol, char key_value[][50]) {
     int i, j;
 
+    // Extract the key
     for (i = 0; symbol[i] != '\0' && symbol[i] != '='; ++i) {
         key_value[0][i] = symbol[i];
     }
     key_value[0][i] = '\0';
 
-    for (j = i + 1; symbol[j] != '\0'; ++j) {
-        key_value[1][j - i - 1] = symbol[j];
+    // jump over '='
+    if (symbol[i] == '=') i++;
+
+    // Extract the value
+    for (j = i; symbol[j] != '\0'; ++j) {
+        key_value[1][j - i] = symbol[j];
     }
+    key_value[1][j - i] = '\0';
 }
 
 void process_arguments(T_HashMap *map, T_LineArguments *line_args, int argc, char *argv[]) {
     
-    int i = 0, flag_active = 0;
-    char flag = 0;
+    int i = 1;
+    char flag = 0, infile_flag = 0;
 
     while (i < argc) {
-        // If this is a flag
         if (argv[i][0] == '-') {
-            flag = argv[i][1];
-            flag_active = 1;
-        } else {
-            flag_active = 0;
-        }
 
-        // Before was a flag
-        if (flag_active == 1) {
+            // Case of bad input
+            if (i + 1 >= argc)
+                break;
+
+            flag = argv[i][1];
             char key_value[2][50];
             int last_directory;
 
             switch (flag) {
             case 'D':
-                printf("Flag D detected with %s\n", argv[i]);
-                read_symbol(argv[i], key_value);
+                printf("Flag D detected with %s\n", argv[i + 1]);
+                read_symbol(argv[i + 1], key_value);
                 hashmap_put(map, key_value[0], key_value[1]);
+                i++;
                 break;
             case 'I':   // add new directory
-                printf("Flag I detected with %s\n", argv[i]);
+                printf("Flag I detected with %s\n", argv[i + 1]);
                 last_directory = line_args->last_directory;
-                strcpy(line_args->source_directors[last_directory], argv[i]);
+                strcpy(line_args->source_directors[last_directory], argv[i + 1]);
                 line_args->last_directory++;
+                i++;
                 break;
             case 'o':   // outfile
-                printf("Flag o detected with %s", argv[i]);
-                strcpy(line_args->outfile, argv[i]);
+                printf("Flag o detected with %s\n", argv[i + 1]);
+                strcpy(line_args->outfile, argv[i + 1]);
+                i++;
                 break;
             
             default:
                 break;
             }
-            flag_active = 0;
+        } else {
+            if (infile_flag == 0) {
+                strcpy(line_args->infile, argv[i]);
+                infile_flag++;
+            } else if (infile_flag == 1) {
+                strcpy(line_args->outfile, argv[i]);
+                infile_flag++;
+            }
         }
         i++;
     }
@@ -69,7 +82,7 @@ void process_arguments(T_HashMap *map, T_LineArguments *line_args, int argc, cha
 void print_line_arguments(T_LineArguments *args) {
     printf("Directories:\n");
     for (int i = 0; i < args->last_directory; ++i) {
-        printf("%d", i);
+        printf("%d ", i);
         printf("%s\n", args->source_directors[i]);
     }
 
