@@ -1,10 +1,11 @@
 #ifndef _HASHMAP_H_
+#define _HASHMAP_H_
 
 #define HASHMAP_KEY_NOT_FOUND 0
 #define HASHMAP_KEY_FOUND 1
 
 typedef struct Mapping{
-    char *key, *value;
+    char key[50], value[50];
 } T_Mapping;
 
 typedef struct HashMap{
@@ -26,5 +27,7 @@ int hashmap_get(T_HashMap* map, char *key, char** value);
 
 // Will delete the hashmap and free the memory
 void hashmap_delete(T_HashMap* map);
+
+void hashmap_print(T_HashMap* map);
 
 #endif

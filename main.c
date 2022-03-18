@@ -1,16 +1,19 @@
 #include <stdio.h>
-#include "hashmap.h"
+#include <stdlib.h>
+#include "project_utils/libraries.h"
 
 int main(int argc, char *argv[]) {
-    
-    int a;
    
-    T_HashMap* map = hashmap_init();
-    char *value = NULL;
-    printf("HI\n");
-    hashmap_put(map, "lala", "band");
-    hashmap_get(map, "lala", &value);
-    printf("%s\n", value);
-    
+    T_HashMap* symbol_map = hashmap_init();
+    T_LineArguments *line_args = (T_LineArguments*) malloc (1 * sizeof(T_LineArguments));
+
+    init_lineargs(line_args);
+
+    process_arguments(symbol_map, line_args, argc, argv);
+    print_line_arguments(line_args);
+    hashmap_print(symbol_map);
+
+    //free(line_args);
+
     return 0;
 }

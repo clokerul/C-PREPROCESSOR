@@ -1,6 +1,7 @@
 #include "hashmap.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 T_HashMap* hashmap_init() {
     T_HashMap *map = (T_HashMap*) malloc(1 * sizeof(T_HashMap));
@@ -29,8 +30,6 @@ void hashmap_delete(T_HashMap* map) {
     T_HashMap *this = map, *next = map->next;
 
     while (this != NULL) {
-        free(this->entry->key);
-        free(this->entry->value);
         free(this->entry);
         this = next;
         if (next != NULL)
@@ -44,18 +43,26 @@ void hashmap_put(T_HashMap* map, char *key, char* value) {
         map = hashmap_init();
     }
 
-    // Trying to find if the file already is existent
-    char *existent_value = NULL;
-    if (hashmap_get(map, key, &existent_value) == HASHMAP_KEY_FOUND) {
-        printf("Mapping %s->%s already exists in this hashmap! For entry %s->%s\n", key, existent_value, key, value);
-    } else {
-        T_HashMap *iter = map;
-        while(iter->next != NULL) {}
+    T_HashMap *iter = map;
+    while(iter->next != NULL && strcmp(iter->entry->key, key)) { iter = iter->next;}
 
+    if (iter->next == NULL) {
         iter->entry = (T_Mapping*) malloc (1 * sizeof(T_Mapping));
         iter->next = hashmap_init();
+    }
 
-        iter->entry->key = key;
-        iter->entry->value = value;
+    strcpy(iter->entry->key, key);
+    strcpy(iter->entry->value, value);
+
+    printf("hasmap_put: values added %s -> %s\n", key, value);
+}
+
+void hashmap_print(T_HashMap* map) {
+    printf("Printing hashmap:\n");
+    T_HashMap *iter = map;
+
+    while (iter != NULL) {
+        printf("[%s - > %s]\n", iter->entry->key, iter->entry->value);
+        iter = iter->next;
     }
 }
