@@ -10,3 +10,4 @@ line_args.o: line_args.c
 
 clean:
 	rm so-cpp
+	rm *.o
