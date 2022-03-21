@@ -54,8 +54,8 @@ int main(int argc, char *argv[]) {
 
                 // Multiline case
                 while (value[strlen(value) - 1] == '\\') {
-                    value[strlen(value) - 1] = '\0';
                     char multiline_define[300];
+                    value[strlen(value) - 1] = '\0';
                     fgets(multiline_define, 300, main_file);
                     strcat(value, strtok(multiline_define, "\t"));
                     value[strlen(value) - 1] = '\0';
