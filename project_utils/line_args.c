@@ -1,6 +1,7 @@
 #include "line_args.h"
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 void init_lineargs(T_LineArguments *line_args) {
     line_args->infile[0] = '\0';
@@ -54,18 +55,24 @@ void process_arguments(T_HashMap *map, T_LineArguments *line_args, int argc, cha
 
             switch (flag) {
             case 'D':
+                #if DEBUG
                 printf("Flag D detected with %s\n", argv[i + 1]);
+                #endif
                 read_symbol(argument, key_value);
                 hashmap_put(map, key_value[0], key_value[1]);
                 break;
             case 'I':   // add new directory
+                #if DEBUG
                 printf("Flag I detected with %s\n", argument);
+                #endif
                 last_directory = line_args->last_directory;
                 strcpy(line_args->source_directors[last_directory], argument);
                 line_args->last_directory++;
                 break;
             case 'o':   // outfile
+                #if DEBUG
                 printf("Flag o detected with %s\n", argument);
+                #endif
                 strcpy(line_args->outfile, argument);
                 break;
             
@@ -79,6 +86,11 @@ void process_arguments(T_HashMap *map, T_LineArguments *line_args, int argc, cha
             } else if (infile_flag == 1) {
                 strcpy(line_args->outfile, argv[i]);
                 infile_flag++;
+            } else {
+                    #if DEBUG
+                printf("Too many flags!\n");
+                #endif
+                exit(-1);
             }
         }
         i++;
@@ -86,12 +98,22 @@ void process_arguments(T_HashMap *map, T_LineArguments *line_args, int argc, cha
 }
 
 void print_line_arguments(T_LineArguments *args) {
+        #if DEBUG
     printf("Directories:\n");
+    #endif
     for (int i = 0; i < args->last_directory; ++i) {
+            #if DEBUG
         printf("%d ", i);
+        #endif
+            #if DEBUG
         printf("%s\n", args->source_directors[i]);
+        #endif
     }
 
+    #if DEBUG
     printf("Infile: %s\n", args->infile);
+    #endif
+        #if DEBUG
     printf("Outfile: %s\n", args->outfile);
+    #endif
 }
