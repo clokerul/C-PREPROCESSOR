@@ -10,26 +10,22 @@ int main(int argc, char *argv[]) {
     // Init PHASE
     T_HashMap* symbol_map = hashmap_init();
     T_LineArguments *line_args = (T_LineArguments*) malloc (1 * sizeof(T_LineArguments));
-    if (line_args == NULL) { exit (12);};
-
     FILE *main_file, *out_file = stdout;
     char line[300], *token, *delimitators = "\t ()[]{}<>=+-*/!&|^.,:;.";
     ssize_t read = 0;
     int skip_else = 0, reenter_if = 0;
 
+    if (line_args == NULL) { exit (12);};
+    
+
     init_lineargs(line_args);
     process_arguments(symbol_map, line_args, argc, argv);
-    #if MY_DEBUG_FLAG
-    print_line_arguments(line_args);
-    #endif
 
     // Open input stream
     if (line_args->infile[0] != '\0') {
         main_file = fopen(line_args->infile, "r");
         if (main_file == NULL) {
-            #if MY_DEBUG_FLAG
             printf("Couldn' t open file!\n");
-            #endif
             exit(-1);
         }
     }
@@ -40,18 +36,14 @@ int main(int argc, char *argv[]) {
     if (line_args->outfile[0] != '\0') {
         out_file = fopen(line_args->outfile, "wr");
         if (out_file == NULL) {
-            #if MY_DEBUG_FLAG
             printf("Couldn' t open file!\n");
-            #endif
             exit(-1);
         }
     }
     
     while (fgets(line, 300, main_file) != NULL) {
         read = strlen(line);
-        #if MY_DEBUG_FLAG
-        printf("Read line [%s].\n", line);
-        #endif
+
 
         // Handles directives
         if (line[0] == '#') {
@@ -59,9 +51,7 @@ int main(int argc, char *argv[]) {
                 line[read - 1] = '\0'; // Get rid of \n
 
             token = strtok(line, " ");
-            #if MY_DEBUG_FLAG
-            printf("Token %s\n", token);
-            #endif
+    
 
             // Handles #define directives
             if (strcmp(token, "#define") == 0) {
@@ -77,15 +67,11 @@ int main(int argc, char *argv[]) {
                     value[strlen(value) - 1] = '\0';
                 }
 
-                #if MY_DEBUG_FLAG
-                printf("%s -> %s\n", symbol, value);
-                #endif
+        
                 if (value != NULL) {
                     process_value(&value, symbol_map);
                 }
-                #if MY_DEBUG_FLAG
-                printf("after processing %s -> %s\n", symbol, value);
-                #endif
+        
                 hashmap_put(symbol_map, symbol, value);
 
                 if (value != NULL)
@@ -110,10 +96,10 @@ int main(int argc, char *argv[]) {
                     }
                     if (non_valid_if == 1) {
                         while (fgets(line, 300, main_file) != NULL) {
+                            char *end_token = strtok(line, " ");
                             if (line[strlen(line) - 1] == '\n')
                                 line[strlen(line) - 1] = '\0';
 
-                            char *end_token = strtok(line, " ");
                             if (!strcmp("#else", end_token) || strcmp("#endif", end_token) == 0) {
                                 reenter_if = 0;
                                 break;
@@ -137,9 +123,7 @@ int main(int argc, char *argv[]) {
                 if (hashmap_get(symbol_map, symbol, value) == HASHMAP_KEY_NOT_FOUND) {
                     found = 0;
                     while (fgets(line, 300, main_file) != NULL) {
-                        #if MY_DEBUG_FLAG
-                        printf("Skipped line %s", line);
-                        #endif
+                
                         if (strcmp("#else\n", line) == 0 || strcmp("#endif\n", line) == 0) {
                             break;
                         }
@@ -157,9 +141,7 @@ int main(int argc, char *argv[]) {
                 if (hashmap_get(symbol_map, symbol, value) == HASHMAP_KEY_FOUND) {
                     found = 1;
                     while (fgets(line, 300, main_file) != NULL) {
-                        #if MY_DEBUG_FLAG
-                        printf("Skipped line %s", line);
-                        #endif
+                
                         if (strcmp("#else\n", line) == 0 || strcmp("#endif\n", line) == 0) {
                             break;
                         }
@@ -178,13 +160,10 @@ int main(int argc, char *argv[]) {
                 skip_else = 0;
             }
         } else {
-            if ((strchr("\t\n", line[0]) && strlen(line) < 3) || (strlen(line) == 5 && line[0] == ' ' && line[3] == ' ')) continue;
-            #if MY_DEBUG_FLAG
-            printf("Analyzing [%s].\n", line);
-            #endif
-
             char line_copy[300], *token, *iterator;
             int iter_num = 0;
+            if ((strchr("\t\n", line[0]) && strlen(line) < 3) || (strlen(line) == 5 && line[0] == ' ' && line[3] == ' ')) continue;
+    
             strcpy(line_copy, line);
             iterator = line_copy;
 
@@ -195,9 +174,7 @@ int main(int argc, char *argv[]) {
             }
 
             while (token != NULL) {
-                #if MY_DEBUG_FLAG
-                printf("Current token: %s\n", token);
-                #endif
+        
                 char value_in_map[50];
 
                 while ((char*)(iterator + iter_num) != (char*)(token + 0)) {
@@ -222,9 +199,6 @@ int main(int argc, char *argv[]) {
             }
         }
     }
-    #if MY_DEBUG_FLAG
-    hashmap_print(symbol_map);
-    #endif
     hashmap_delete(symbol_map);
 
     fclose(main_file);
@@ -237,6 +211,7 @@ int main(int argc, char *argv[]) {
 // Processes imbricated defines
 void process_value(char **value, T_HashMap *symbol_map) {
     char new_value[50] = "", copy_value[50], *token, value_in_map[50];
+    char *allocated_string;
 
     strcpy(copy_value, *value);
     token = strtok(copy_value, " ");
@@ -251,7 +226,7 @@ void process_value(char **value, T_HashMap *symbol_map) {
             strcat(new_value, " ");
     } 
 
-    char *allocated_string = (char*) malloc (50* sizeof(char));
+    *allocated_string = (char*) malloc (50* sizeof(char));
     if (allocated_string == NULL) { exit (12);};
     strcpy(allocated_string, new_value);
     *value = allocated_string;

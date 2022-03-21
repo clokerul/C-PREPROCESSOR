@@ -1,0 +1,18 @@
+O tema execrabila. Nu exista suport, erori peste erori degeaba, cod functional, trebuie trecut iar si iar prin el,
+ ma plimb pe 2 platforme linux si windows, e atat de frustrant si prost facut sistemul. La laborator facem 1 iar aici inca 99 pana 
+ la 100. Nu stiu cat o sa iau, nu stiu cine e responsabil pentru temele astea, dar din partea mea, trebuie regandite.
+
+Ce am facut in exercitii?
+
+Hashmap.c: o strucutra de tip map, alocat dinamic, se adauga la fiecare inserare un element nou si se prelungeste dimensiunea,
+        acceasi logica si la delete din tabela. Daca o cheie apare a doua oara este rescrisa valoarea ei.
+
+Line_args.c: proceseaza argumentele si le pune intr-o structura aferenta
+
+main.c: citesc linie cu linie, tratez fiecare instructiune # diferit.
+    #define, adaug valoarea in Hashmap
+    #ifdef verific valoarea, daca este definita tratez instructiunile ce urmeaza pana la endif sau else ca instructiuni normale
+    #if idem dar verific diferit de 0, iar la elif reconsider conditita de if
+    #include, nu mi-am mai batut capul
+
+Bafta, sper ca nu toate temele sunt in halul asta
