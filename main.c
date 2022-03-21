@@ -14,9 +14,7 @@ int main(int argc, char *argv[]) {
     char line[300], *token, *delimitators = "\t ()[]{}<>=+-*/!&|^.,:;.";
     ssize_t read = 0;
     int skip_else = 0, reenter_if = 0;
-
     if (line_args == NULL) { exit (12);};
-    
 
     init_lineargs(line_args);
     process_arguments(symbol_map, line_args, argc, argv);
@@ -25,7 +23,6 @@ int main(int argc, char *argv[]) {
     if (line_args->infile[0] != '\0') {
         main_file = fopen(line_args->infile, "r");
         if (main_file == NULL) {
-            printf("Couldn' t open file!\n");
             exit(-1);
         }
     }
@@ -36,7 +33,6 @@ int main(int argc, char *argv[]) {
     if (line_args->outfile[0] != '\0') {
         out_file = fopen(line_args->outfile, "wr");
         if (out_file == NULL) {
-            printf("Couldn' t open file!\n");
             exit(-1);
         }
     }
@@ -44,14 +40,12 @@ int main(int argc, char *argv[]) {
     while (fgets(line, 300, main_file) != NULL) {
         read = strlen(line);
 
-
         // Handles directives
         if (line[0] == '#') {
             if (line[read - 1] == '\n')
                 line[read - 1] = '\0'; // Get rid of \n
 
             token = strtok(line, " ");
-    
 
             // Handles #define directives
             if (strcmp(token, "#define") == 0) {
@@ -67,11 +61,9 @@ int main(int argc, char *argv[]) {
                     value[strlen(value) - 1] = '\0';
                 }
 
-        
                 if (value != NULL) {
                     process_value(&value, symbol_map);
                 }
-        
                 hashmap_put(symbol_map, symbol, value);
 
                 if (value != NULL)
@@ -96,10 +88,10 @@ int main(int argc, char *argv[]) {
                     }
                     if (non_valid_if == 1) {
                         while (fgets(line, 300, main_file) != NULL) {
-                            char *end_token = strtok(line, " ");
                             if (line[strlen(line) - 1] == '\n')
                                 line[strlen(line) - 1] = '\0';
 
+                            char *end_token = strtok(line, " ");
                             if (!strcmp("#else", end_token) || strcmp("#endif", end_token) == 0) {
                                 reenter_if = 0;
                                 break;
@@ -123,7 +115,6 @@ int main(int argc, char *argv[]) {
                 if (hashmap_get(symbol_map, symbol, value) == HASHMAP_KEY_NOT_FOUND) {
                     found = 0;
                     while (fgets(line, 300, main_file) != NULL) {
-                
                         if (strcmp("#else\n", line) == 0 || strcmp("#endif\n", line) == 0) {
                             break;
                         }
@@ -141,7 +132,6 @@ int main(int argc, char *argv[]) {
                 if (hashmap_get(symbol_map, symbol, value) == HASHMAP_KEY_FOUND) {
                     found = 1;
                     while (fgets(line, 300, main_file) != NULL) {
-                
                         if (strcmp("#else\n", line) == 0 || strcmp("#endif\n", line) == 0) {
                             break;
                         }
@@ -163,7 +153,7 @@ int main(int argc, char *argv[]) {
             char line_copy[300], *token, *iterator;
             int iter_num = 0;
             if ((strchr("\t\n", line[0]) && strlen(line) < 3) || (strlen(line) == 5 && line[0] == ' ' && line[3] == ' ')) continue;
-    
+
             strcpy(line_copy, line);
             iterator = line_copy;
 
@@ -174,7 +164,6 @@ int main(int argc, char *argv[]) {
             }
 
             while (token != NULL) {
-        
                 char value_in_map[50];
 
                 while ((char*)(iterator + iter_num) != (char*)(token + 0)) {

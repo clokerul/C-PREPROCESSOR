@@ -13,13 +13,14 @@ T_HashMap* hashmap_init() {
 
 int hashmap_get(T_HashMap* map, char *key, char value[50]) {
     T_HashMap *iter = map;
-
     if (map == NULL || map->entry == NULL) return HASHMAP_KEY_NOT_FOUND;
 
     while (iter != NULL && iter->entry != NULL) {
         if (strcmp(iter->entry->key, key) == 0) {
             strcpy(value, iter->entry->value);
-    
+            #if MY_DEBUG_FLAG
+            printf("Found symbol %s -> %s", key, value);
+            #endif
             return HASHMAP_KEY_FOUND;
         }
         iter = iter->next;
@@ -32,7 +33,6 @@ void hashmap_delete_value(T_HashMap** map_pointer, char *key) {
     T_HashMap *map = *map_pointer;
     T_HashMap *iter = map;
 
-
     if (map == NULL || map->entry == NULL) return;
     if (strcmp(map->entry->key, key) == 0) {
         *map_pointer = map->next;
@@ -40,6 +40,7 @@ void hashmap_delete_value(T_HashMap** map_pointer, char *key) {
         free(map);
         return;
     }
+
 
     while (iter->next != NULL && iter->next->entry != NULL) {
         if (strcmp(iter->next->entry->key, key) == 0) {
@@ -62,6 +63,7 @@ void hashmap_put(T_HashMap* map, char *key, char* value) {
         map = hashmap_init();
     }
 
+
     while(iter->next != NULL && strcmp(iter->entry->key, key)) { iter = iter->next;}
 
     if (iter->next == NULL) {
@@ -76,23 +78,24 @@ void hashmap_put(T_HashMap* map, char *key, char* value) {
         strcpy(iter->entry->value, value);
     else
         strcpy(iter->entry->value, "");
-
-
 }
 
 void hashmap_print(T_HashMap* map) {
     T_HashMap *iter = map;
 
     while (iter != NULL && iter->entry != NULL) {
+        #if MY_DEBUG_FLAG
         printf("[%s - > %s]\n", iter->entry->key, iter->entry->value);
+        #endif
         iter = iter->next;
     }
 }
 
 void hashmap_delete(T_HashMap* map) {
-    T_HashMap *this = map, *next = map->next;
+    T_HashMap *this, *next;
     if (map == NULL) return;
 
+    this = map, next = map->next;
 
     while (this != NULL) {
         free(this->entry);
