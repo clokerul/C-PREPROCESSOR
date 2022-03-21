@@ -88,10 +88,10 @@ int main(int argc, char *argv[]) {
                     }
                     if (non_valid_if == 1) {
                         while (fgets(line, 300, main_file) != NULL) {
+                            char *end_token = strtok(line, " ");
                             if (line[strlen(line) - 1] == '\n')
                                 line[strlen(line) - 1] = '\0';
 
-                            char *end_token = strtok(line, " ");
                             if (!strcmp("#else", end_token) || strcmp("#endif", end_token) == 0) {
                                 reenter_if = 0;
                                 break;
