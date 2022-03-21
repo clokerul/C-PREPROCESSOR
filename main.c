@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "project_utils/libraries.h"
+#include "libraries.h"
 
 void process_value(char **value, T_HashMap *symbol_map);
 
