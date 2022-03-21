@@ -18,6 +18,7 @@ int main(int argc, char *argv[]) {
 
     init_lineargs(line_args);
     process_arguments(symbol_map, line_args, argc, argv);
+    out_file = stdout;
 
     // Open input stream
     if (line_args->infile[0] != '\0') {
