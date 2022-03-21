@@ -226,7 +226,7 @@ void process_value(char **value, T_HashMap *symbol_map) {
             strcat(new_value, " ");
     } 
 
-    *allocated_string = (char*) malloc (50* sizeof(char));
+    allocated_string = (char*) malloc (50* sizeof(char));
     if (allocated_string == NULL) { exit (12);};
     strcpy(allocated_string, new_value);
     *value = allocated_string;
