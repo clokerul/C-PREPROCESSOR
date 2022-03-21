@@ -12,7 +12,7 @@ int main(int argc, char *argv[]) {
     T_LineArguments *line_args = (T_LineArguments*) malloc (1 * sizeof(T_LineArguments));
     FILE *main_file, *out_file = stdout;
     char line[300], *token, *delimitators = "\t ()[]{}<>=+-*/!&|^.,:;.";
-    ssize_t read = 0;
+    int read = 0;
     int skip_else = 0, reenter_if = 0;
     if (line_args == NULL) { exit (12);};
 
