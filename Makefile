@@ -1,2 +1,5 @@
 build:
-	gcc main.c project_utils/*.c -o so-cpp -Wall -g
+	cl /MD main.c project_utils/*.c -o so-cpp
+
+clean:
+	del so-cpp
